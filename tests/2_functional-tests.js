@@ -15,10 +15,18 @@ chai.use(chaiHttp);
 
 suite('Functional Tests', function() {
 
+  this.timeout(5000);
+  
+  // Drop databases
+  //IP.collection.drop();
+  //Stock.collection.drop();
+
   suite('API ROUTING FOR /api/threads/:board', function() {
     
     suite('POST', function() {
-      
+      chai.request(server).post('/api/threads/test').send({ text: 'This is a post', delete_password: 'password' }).end((err, res) => {
+        const board = r
+      });
     });
     
     suite('GET', function() {
