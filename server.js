@@ -71,9 +71,9 @@ mongoose
     console.log("Connected to DB.");
     //Start our server and tests!
 
-    if (process.env.NODE_ENV === "test") {
-      process.env.PORT = 3001;
-    }
+    // if (process.env.NODE_ENV === "test") {
+    //   process.env.PORT = 3001;
+    // }
 
     app.listen(process.env.PORT || 3000, function() {
       console.log("Listening on port " + process.env.PORT);

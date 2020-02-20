@@ -12,6 +12,8 @@ var assert = chai.assert;
 const expect = chai.expect;
 var server = require("../server");
 const Browser = require("zombie");
+const browser = new Browser();
+const url = 'https://fcc-proj-anonymous-message-board.glitch.me';
 
 //Browser.localhost("localhost", 3001);
 chai.use(chaiHttp);
@@ -22,6 +24,14 @@ suite("Functional Tests", function() {
   // Drop databases
   //IP.collection.drop();
   //Stock.collection.drop();
+  
+  test("headless browser is defined", function(done) {
+    assert.notTypeOf(browser, 'undefined');
+    assert.instanceOf(browser, Browser);
+    done();
+  });
+  
+  
 
   suite("API ROUTING FOR /api/threads/:board", function() {
     suite("POST", function() {
@@ -33,6 +43,12 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test$/);
+          
+            const redirectUrl = res.redirects[0];
+          
+            browser.visit(`${url}/b/test`, err => {
+              browser.assert.success();
+            });
 
             done();
           })
