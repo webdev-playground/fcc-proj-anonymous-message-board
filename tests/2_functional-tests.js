@@ -12,12 +12,13 @@ var assert = chai.assert;
 const expect = chai.expect;
 var server = require("../server");
 const Browser = require('zombie');
-const browser = new Browser();
 
+Browser.localhost('fcc-proj-anonymous-message-board.glitch.me', 3001);
 chai.use(chaiHttp);
 
 suite("Functional Tests", function() {
   this.timeout(5000);
+  const browser = new Browser();
 
   // Drop databases
   //IP.collection.drop();
@@ -34,7 +35,8 @@ suite("Functional Tests", function() {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test$/);
             
-            // browser.visit('/b/test')
+            browser.visit('/b/test');
+            browser.assert.text('h3', 'This is a thread');
 
             done();
           })
