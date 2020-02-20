@@ -49,7 +49,18 @@ suite("Functional Tests", function() {
           .get("/api/threads/test")
           .then(res => {
             assert.equal(res.status, 200);
-            //assert.equal(res.body.)
+            assert.isArray(res.body);
+            assert.isAtMost(res.body.length, 10);
+            res.body.forEach(thread => {
+              assert.isArray(thread.replies);
+              assert.isAtMost(thread.replies.length, 3);
+              assert.notProperty(thread, "reported");
+              assert.notProperty(thread, "password");
+              thread.replies.forEach(reply => {
+                assert.notProperty(thread, "reported");
+                assert.notProperty(thread, "password");
+              });
+            });
 
             done();
           })
