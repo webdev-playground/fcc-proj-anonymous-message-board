@@ -12,6 +12,7 @@ var assert = chai.assert;
 const expect = chai.expect;
 var server = require("../server");
 const Browser = require('zombie');
+const browser = new Browser();
 
 chai.use(chaiHttp);
 
@@ -33,8 +34,7 @@ suite("Functional Tests", function() {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test$/);
             
-          
-            const
+            // browser.visit('/b/test')
 
             done();
           })
