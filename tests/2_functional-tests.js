@@ -12,6 +12,9 @@ var assert = chai.assert;
 const expect = chai.expect;
 var server = require("../server");
 const Browser = require("zombie");
+
+Browser.localhost('https://fcc-proj-anonymous-message-board.glitch.me', 3000);
+
 const browser = new Browser();
 const url = 'https://fcc-proj-anonymous-message-board.glitch.me';
 
@@ -48,6 +51,7 @@ suite("Functional Tests", function() {
           
             browser.visit(`${url}/b/test`, err => {
               browser.assert.success();
+              browser.assert.text('h3', 'This is a thread');
             });
 
             done();
