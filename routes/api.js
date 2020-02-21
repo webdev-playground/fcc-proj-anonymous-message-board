@@ -38,8 +38,12 @@ module.exports = function(app) {
       const { board } = req.params;
     
       try {
-        
+        const     
+      } catch (err) {
+        return res.status(400).json({ error: err.message });
       }
+    
+      return 
     
   });
 
