@@ -24,11 +24,11 @@ exports.listThreads = async (req, res) => {
       .sort({ bumped_on: -1 })
       .limit(10)
       .select({
-        delete_passwords: 0,
+        delete_password: 0,
         reported: 0,
-        "replies.delete_passwords": 0,
+        "replies.delete_password": 0,
         "replies.reported": 0
-      });
+      }).lean();  // specify lean so that we get a plain JS Object that we can insert new properties into
 
     threadList.forEach(thread => {
       thread.replycount = thread.replies.length;
@@ -36,6 +36,7 @@ exports.listThreads = async (req, res) => {
       if (thread.replies.length > 3) {
         thread.replies = thread.replies.slice(-3);
       }
+      console.log(thread);
     });
 
     return res.status(200).json(threadList);
