@@ -61,3 +61,30 @@ exports.deleteThread = async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 }
+
+exports.reportThread = async (req, res) => {
+  const { board } = req.params;
+  const Thread = ThreadModel.setBoard(board);
+
+  const { thread_id } = req.body;
+  
+  try {
+    const reportedThread = await Thread.findByIdAndUpdate(
+      thread_id,
+      {
+        $set: {
+          reported: true
+        }
+      },
+      { new: true }
+    );
+    
+    if (!reportedThread) {
+      return res.status(404).json({ error: 'No such thread' });  
+    }
+    
+    return res.status(200).send('success');
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}

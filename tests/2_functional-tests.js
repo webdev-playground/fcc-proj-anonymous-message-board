@@ -18,6 +18,8 @@ chai.use(chaiHttp);
 
 let threadId1;
 let threadId2;
+let replyId1;
+let replyId2;
 
 suite("Functional Tests", function() {
   this.timeout(5000);
@@ -143,6 +145,8 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 200);
             assert.equal(res.text, 'success');
+          
+            done();
           });
       });
     });
@@ -194,6 +198,10 @@ suite("Functional Tests", function() {
             assert.property(res.body.replies[0], 'created_on');
             assert.notProperty(res.body.replies[0], 'delete_password');
             assert.notProperty(res.body.replies[0], 'reported');
+          
+            // set replyId
+            replyId1 = res.body.replies[0]._id;
+            replyId2 = res.body.replies[1]._id;
 
             done();
           })
@@ -217,7 +225,23 @@ suite("Functional Tests", function() {
       });
     });
 
-    suite("PUT", function() {});
+    suite("PUT", function() {
+      test('report reply on thread', done => {
+        chai
+          .request(server)
+          .put('/api/replies/test')
+          .send({ thread_id: threadId2, reply_id: replyId2 })
+          .then(res => {
+            assert.equal(res.status, 200);
+            assert.equal(res.text, 'success');
+          
+            done();
+          })
+          .catch(err => {
+            console.error(err.message);
+          })
+      });
+    });
 
     suite("DELETE", function() {});
   });
