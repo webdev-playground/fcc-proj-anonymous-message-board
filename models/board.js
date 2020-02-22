@@ -7,10 +7,7 @@ const boardSchema = Schema({
     required: true,
     unique: true
   },
-  threads: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Thread'
-  }]
+  threads: [threadSchema]
 });
 
 module.exports = mongoose.model('Board', boardSchema);
