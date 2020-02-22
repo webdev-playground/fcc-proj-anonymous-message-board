@@ -9,6 +9,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
+const replyHandler = require('../controllers/replyHandler');
 const threadHandler = require('../controllers/threadHandler');
 
 module.exports = function(app) {
@@ -18,5 +19,7 @@ module.exports = function(app) {
     .get(threadHandler.listThreads)
     .delete(threadHandler.deleteThread);
 
-  app.route("/api/replies/:board");
+  app.route("/api/replies/:board")
+    .post(replyHandler.createReply)
+    .get(replyHandler.getReplies);
 };

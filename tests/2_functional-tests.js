@@ -47,7 +47,7 @@ suite("Functional Tests", function() {
             expect(res).to.redirectTo(/\/b\/test\/$/);
           })
           .catch(err => {
-            console.error(err.message)
+            console.error(err.message);
           });
 
         chai
@@ -60,7 +60,7 @@ suite("Functional Tests", function() {
             done();
           })
           .catch(err => {
-            console.error(err.message)
+            console.error(err.message);
           });
       });
     });
@@ -97,7 +97,7 @@ suite("Functional Tests", function() {
             done();
           })
           .catch(err => {
-            console.error(err.message)
+            console.error(err.message);
           });
       });
     });
@@ -113,7 +113,7 @@ suite("Functional Tests", function() {
             done();
           })
           .catch(err => {
-            console.error(err.message)
+            console.error(err.message);
           });
       });
 
@@ -127,7 +127,7 @@ suite("Functional Tests", function() {
             done();
           })
           .catch(err => {
-            console.error(err.message)
+            console.error(err.message);
           });
       });
     });
@@ -144,17 +144,40 @@ suite("Functional Tests", function() {
           .send({ text: 'cool thread', delete_password: 'reply_password', thread_id: threadId2 })
           .then(res => {
             assert.equal(res.status, 200);
-            const redirectUrlRegex = new RegExp("/b/test/" + threadId2 + '$');
+            const redirectUrlRegex = new RegExp("/b/test/" + threadId2 + '/$');
+            expect(res).to.redirectTo(redirectUrlRegex);
+          })
+          .catch(err => {
+            console.error(err.message);
+          });
+        
+        chai
+          .request(server)
+          .post('/api/replies/test')
+          .send({ text: 'hello world', delete_password: 'reply_password', thread_id: threadId2 })
+          .then(res => {
+            assert.equal(res.status, 200);
+            const redirectUrlRegex = new RegExp("/b/test/" + threadId2 + '/$');
             expect(res).to.redirectTo(redirectUrlRegex);
             done();
           })
           .catch(err => {
-            console.error(err.message)
+            console.error(err.message);
           });
       });
     });
 
-    suite("GET", function() {});
+    suite("GET", function() {
+      test('get all replies from thread', done => {
+        chai
+          .request(server)
+          .get('/api/replies/test?thread_id=' + threadId2)
+          .then()
+          .catch(err => {
+            console.error(err.message);
+          })
+      });
+    });
 
     suite("PUT", function() {});
 
