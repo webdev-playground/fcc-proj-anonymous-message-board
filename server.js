@@ -72,10 +72,10 @@ mongoose
     //Start our server and tests!
 
     if (process.env.NODE_ENV === "test") {
-      process.env.PORT = 3000;
+      process.env.PORT = 3001;
     }
 
-    app.listen(process.env.PORT || 8000, function() {
+    app.listen(process.env.PORT || 3000, function() {
       console.log("Listening on port " + process.env.PORT);
       if (process.env.NODE_ENV === "test") {
         console.log("Running Tests...");

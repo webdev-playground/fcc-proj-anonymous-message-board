@@ -18,10 +18,10 @@ chai.use(chaiHttp);
 suite("Functional Tests", function() {
   this.timeout(5000);
 
-  setup(function() {
+  setup(async function() {
     // Drop test database
     const Thread = ThreadModel.setBoard("test");
-    Thread.collection.drop();
+    await Thread.collection.drop();
   });
 
   suite("API ROUTING FOR /api/threads/:board", function() {
@@ -33,7 +33,7 @@ suite("Functional Tests", function() {
           .send({ text: "This is a thread", delete_password: "password" })
           .then(res => {
             assert.equal(res.status, 200);
-            expect(res).to.redirectTo(/\/b\/test$/);
+            expect(res).to.redirectTo(/\/b\/test\/$/);
             done();
           })
           .catch(err => {
