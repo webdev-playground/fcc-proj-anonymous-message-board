@@ -18,10 +18,25 @@ exports.createThread = async (req, res) => {
 exports.listThreads = async (req, res) => {
   const { board } = req.params;
   const Thread = ThreadModel.setBoard(board);
-  
+
   try {
-    const threadList = Thread.find({}).sort({ })
-  } catch (err) {
+    const threadList = await Thread.find({})
+      .sort({ bumped_on: -1 })
+      .limit(10)
+      .select({
+        delete_passwords: 0,
+        reported: 0,
+        "replies.delete_passwords": 0,
+        "replies.reported": 0
+      });
     
+    threadList.forEach(thread => {
+      // Keep last three replies
+      thread.replies = thread.replies.slice(-3);
+    });
+    
+    return res.status(200).json(threadList);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
   }
 };
