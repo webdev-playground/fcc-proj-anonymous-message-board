@@ -172,11 +172,32 @@ suite("Functional Tests", function() {
         chai
           .request(server)
           .get('/api/replies/test?thread_id=' + threadId2)
-          .then()
+          .then(res => {
+            assert.equal(res.status, 200);
+            assert.equal(res.body._id, threadId2);
+            assert.isArray(res.body.replies);
+            assert.equal(res.body.replies, 2);
+            assert.property(res.body.replies[0], 'text');
+            assert.property(res.body.replies[0], 'created_on');
+            assert.notProperty(res.body.replies[0], 'delete_password');
+            assert.notProperty(res.body.replies[0], 'reported');
+
+            done();
+          })
           .catch(err => {
             console.error(err.message);
-          })
+          });
       });
+      
+      // test('get all replies from non-existant thread', done => {
+      //   chai
+      //     .request(server)
+      //     .get('/api/replies/test?thread_id=5e50efa24eb4770f98f232aa')
+      //     .then()
+      //     .catch(err => {
+      //       console.error(err.message);
+      //     })
+      // });
     });
 
     suite("PUT", function() {});
