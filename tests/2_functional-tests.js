@@ -137,7 +137,7 @@ suite("Functional Tests", function() {
 
   suite("API ROUTING FOR /api/replies/:board", function() {
     suite("POST", function() {
-      test('show all replies on thread', done => {
+      test('create reply on thread', done => {
         chai
           .request(server)
           .post('/api/replies/test')
