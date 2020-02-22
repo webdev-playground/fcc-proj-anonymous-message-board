@@ -52,11 +52,10 @@ exports.deleteThread = async (req, res) => {
   
   try {
     // issue delete request
-    const deletedThread = await Thread.deleteOne({ _id: thread_id, delete_password: delete_password });
+    const deletedThread = await Thread.findOneAndDelete({ _id: thread_id, delete_password: delete_password });
     if (!deletedThread) {
       return res.status(400).json({ error: 'Invalid thread_id or delete_password.'});
     }
-    console.log(deletedThread);
     return res.status(200).json({ message: 'Thread deleted.' });
   } catch (err) {
     return res.status(400).json({ error: err.message });

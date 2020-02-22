@@ -17,6 +17,7 @@ const mongoose = require("mongoose");
 chai.use(chaiHttp);
 
 let threadId1;
+let threadId2;
 
 suite("Functional Tests", function() {
   this.timeout(5000);
@@ -44,6 +45,9 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test\/$/);
+          })
+          .catch(err => {
+            console.error(err.message)
           });
 
         chai
@@ -54,6 +58,9 @@ suite("Functional Tests", function() {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test\/$/);
             done();
+          })
+          .catch(err => {
+            console.error(err.message)
           });
       });
     });
@@ -83,10 +90,14 @@ suite("Functional Tests", function() {
               });
             });
 
-            // set threadId1
+            // set threadId
             threadId1 = res.body[0]._id;
+            threadId2 = res.body[1]._id;
 
             done();
+          })
+          .catch(err => {
+            console.error(err.message)
           });
       });
     });
@@ -102,7 +113,7 @@ suite("Functional Tests", function() {
             done();
           })
           .catch(err => {
-            console.log(err.message);
+            console.error(err.message)
           });
       });
 
@@ -114,6 +125,9 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 200);
             done();
+          })
+          .catch(err => {
+            console.error(err.message)
           });
       });
     });
@@ -122,7 +136,23 @@ suite("Functional Tests", function() {
   });
 
   suite("API ROUTING FOR /api/replies/:board", function() {
-    suite("POST", function() {});
+    suite("POST", function() {
+      test('show all replies on thread', done => {
+        chai
+          .request(server)
+          .post('/api/replies/test')
+          .send({ text: 'cool thread', delete_password: 'reply_password', thread_id: threadId2 })
+          .then(res => {
+            assert.equal(res.status, 200);
+            const redirectUrlRegex = new RegExp("/b/test/" + threadId2 + '$');
+            expect(res).to.redirectTo(redirectUrlRegex);
+            done();
+          })
+          .catch(err => {
+            console.error(err.message)
+          });
+      });
+    });
 
     suite("GET", function() {});
 
