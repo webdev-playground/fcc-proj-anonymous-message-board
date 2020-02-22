@@ -12,7 +12,7 @@ const replySchema = Schema({
   },
   created_on: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   reported: {
     type: Boolean,
@@ -31,11 +31,11 @@ const threadSchema = Schema({
   },
   created_on: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   bumped_on: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   reported: {
     type: Boolean,

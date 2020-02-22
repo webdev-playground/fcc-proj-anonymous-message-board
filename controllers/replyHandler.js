@@ -1,24 +1,30 @@
 const ThreadModel = require("../models/thread");
 
-exports.createReply = (req, res) => {
+exports.createReply = async (req, res) => {
   const { board } = req.params;
   const Thread = ThreadModel.setBoard(board);
   
   text, delete_password, thread_id
   const { text, delete_password, thread_id } = req.body;
   
+  const newReply = { text, delete_password };
+  
   try {
-    Thread.findOneAndUpdate(
+    await Thread.findOneAndUpdate(
       { thread_id },
       {
         $push: {
-          replies: { text, delete_password }
+          replies: newReply
+        },
+        $currentDate: {
+          bumped_on: true
         }
-      },
-      { new: true }
-    )  
-  } catch (err) {
+      }
+    )
     
+    return res.redirect(`/b/${board}/${thread_id}`);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
   }
   
   bumped_on <- thread
