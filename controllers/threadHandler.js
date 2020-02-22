@@ -12,7 +12,7 @@ exports.createThread = async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 
-  res.redirect(`/b/${board}`);
+  res.redirect(`/b/${board}/`);
 };
 
 exports.listThreads = async (req, res) => {
@@ -29,12 +29,15 @@ exports.listThreads = async (req, res) => {
         "replies.delete_passwords": 0,
         "replies.reported": 0
       });
-    
+
     threadList.forEach(thread => {
+      thread.replycount = thread.replies.length;
       // Keep last three replies
-      thread.replies = thread.replies.slice(-3);
+      if (thread.replies.length > 3) {
+        thread.replies = thread.replies.slice(-3);
+      }
     });
-    
+
     return res.status(200).json(threadList);
   } catch (err) {
     return res.status(400).json({ error: err.message });
