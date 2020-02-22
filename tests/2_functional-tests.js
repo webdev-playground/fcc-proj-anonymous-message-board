@@ -16,6 +16,8 @@ const mongoose = require("mongoose");
 
 chai.use(chaiHttp);
 
+let threadId1;
+
 suite("Functional Tests", function() {
   this.timeout(5000);
 
@@ -41,9 +43,16 @@ suite("Functional Tests", function() {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test\/$/);
             done();
-          })
-          .catch(err => {
-            throw err;
+          });
+        
+        chai
+          .request(server)
+          .post("/api/threads/test")
+          .send({ text: "This is another thread", delete_password: "password" })
+          .then(res => {
+            assert.equal(res.status, 200);
+            expect(res).to.redirectTo(/\/b\/test\/$/);
+            done();
           });
       });
     });
@@ -60,6 +69,11 @@ suite("Functional Tests", function() {
             res.body.forEach(thread => {
               assert.isArray(thread.replies);
               assert.isAtMost(thread.replies.length, 3);
+              assert.property(thread, '_id');
+              assert.property(thread, 'text');
+              assert.property(thread, 'created_on');
+              assert.property(thread, 'bumped_on');
+              assert.property(thread, 'replies');
               assert.notProperty(thread, "reported");
               assert.notProperty(thread, "delete_password");
               thread.replies.forEach(reply => {
@@ -67,16 +81,38 @@ suite("Functional Tests", function() {
                 assert.notProperty(thread, "delete_password");
               });
             });
+          
+            // set threadId1
+            threadId1 = res.body[0]._id;
 
             done();
-          })
-          .catch(err => {
-            throw err;
           });
       });
     });
 
-    suite("DELETE", function() {});
+    suite("DELETE", function() {
+      test("delete thread with wrong password", done => {
+        chai
+          .request(server)
+          .delete("/api/threads/test")
+          .send({ thread_id: threadId1, delete_password: "wrongPassword" })
+          .then(res => {
+            assert.equal(res.status, 400);
+            done();
+          });
+      });
+
+      test("delete thread with correct password", done => {
+        chai
+          .request(server)
+          .delete("/api/threads/test")
+          .send({ thread_id: threadId1, delete_password: "password" })
+          .then(res => {
+            assert.equal(res.status, 200);
+            done();
+          });
+      });
+    });
 
     suite("PUT", function() {});
   });
