@@ -110,6 +110,7 @@ suite("Functional Tests", function() {
           .send({ thread_id: threadId1, delete_password: "wrongPassword" })
           .then(res => {
             assert.equal(res.status, 400);
+            assert.equal(res.text, 'incorrect thread id or password');
             done();
           })
           .catch(err => {
@@ -124,6 +125,7 @@ suite("Functional Tests", function() {
           .send({ thread_id: threadId1, delete_password: "password" })
           .then(res => {
             assert.equal(res.status, 200);
+            assert.equal(res.text, 'success');
             done();
           })
           .catch(err => {
@@ -132,7 +134,18 @@ suite("Functional Tests", function() {
       });
     });
 
-    suite("PUT", function() {});
+    suite("PUT", function() {
+      test('report thread', done => {
+        chai
+          .request(server)
+          .put('/api/threads/test')
+          .send({ thread_id: threadId2 })
+          .then(res => {
+            assert.equal(res.status, 200);
+            assert.equal(res.text, 'success');
+          });
+      });
+    });
   });
 
   suite("API ROUTING FOR /api/replies/:board", function() {
@@ -176,7 +189,7 @@ suite("Functional Tests", function() {
             assert.equal(res.status, 200);
             assert.equal(res.body._id, threadId2);
             assert.isArray(res.body.replies);
-            assert.equal(res.body.replies, 2);
+            assert.equal(res.body.replies.length, 2);
             assert.property(res.body.replies[0], 'text');
             assert.property(res.body.replies[0], 'created_on');
             assert.notProperty(res.body.replies[0], 'delete_password');
@@ -189,15 +202,19 @@ suite("Functional Tests", function() {
           });
       });
       
-      // test('get all replies from non-existant thread', done => {
-      //   chai
-      //     .request(server)
-      //     .get('/api/replies/test?thread_id=5e50efa24eb4770f98f232aa')
-      //     .then()
-      //     .catch(err => {
-      //       console.error(err.message);
-      //     })
-      // });
+      test('get all replies from non-existant thread', done => {
+        chai
+          .request(server)
+          .get('/api/replies/test?thread_id=5e50efa24eb4770f98f232aa')
+          .then(res => {
+            assert.equal(res.status, 404);
+          
+            done();
+          })
+          .catch(err => {
+            console.error(err.message);
+          })
+      });
     });
 
     suite("PUT", function() {});

@@ -9,8 +9,8 @@ exports.createReply = async (req, res) => {
   const newReply = { text, delete_password };
 
   try {
-    await Thread.findOneAndUpdate(
-      { thread_id },
+    const updated = await Thread.findByIdAndUpdate(
+      thread_id,
       {
         $push: {
           replies: newReply
@@ -18,7 +18,8 @@ exports.createReply = async (req, res) => {
         $currentDate: {
           bumped_on: true
         }
-      }
+      },
+      { new: true }
     );
     return res.redirect(`/b/${board}/${thread_id}/`);
   } catch (err) {
