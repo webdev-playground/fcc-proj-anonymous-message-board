@@ -36,7 +36,6 @@ exports.listThreads = async (req, res) => {
       if (thread.replies.length > 3) {
         thread.replies = thread.replies.slice(-3);
       }
-      console.log(thread);
     });
 
     return res.status(200).json(threadList);

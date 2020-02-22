@@ -12,16 +12,22 @@ var assert = chai.assert;
 const expect = chai.expect;
 var server = require("../server");
 const ThreadModel = require("../models/thread");
+const mongoose = require("mongoose");
 
 chai.use(chaiHttp);
 
 suite("Functional Tests", function() {
   this.timeout(5000);
 
-  setup(async function() {
+  suiteSetup(async function() {
     // Drop test database
     const Thread = ThreadModel.setBoard("test");
-    await Thread.collection.drop();
+
+    try {
+      await Thread.collection.drop();
+    } catch (err) {
+      console.log("'test' database does not yet exist. Continuing with tests...");
+    }
   });
 
   suite("API ROUTING FOR /api/threads/:board", function() {
