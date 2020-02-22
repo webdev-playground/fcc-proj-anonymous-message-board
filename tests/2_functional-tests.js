@@ -28,7 +28,9 @@ suite("Functional Tests", function() {
     try {
       await Thread.collection.drop();
     } catch (err) {
-      console.log("'test' database does not yet exist. Continuing with tests...");
+      console.log(
+        "'test' database does not yet exist. Continuing with tests..."
+      );
     }
   });
 
@@ -42,9 +44,8 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 200);
             expect(res).to.redirectTo(/\/b\/test\/$/);
-            done();
           });
-        
+
         chai
           .request(server)
           .post("/api/threads/test")
@@ -69,11 +70,11 @@ suite("Functional Tests", function() {
             res.body.forEach(thread => {
               assert.isArray(thread.replies);
               assert.isAtMost(thread.replies.length, 3);
-              assert.property(thread, '_id');
-              assert.property(thread, 'text');
-              assert.property(thread, 'created_on');
-              assert.property(thread, 'bumped_on');
-              assert.property(thread, 'replies');
+              assert.property(thread, "_id");
+              assert.property(thread, "text");
+              assert.property(thread, "created_on");
+              assert.property(thread, "bumped_on");
+              assert.property(thread, "replies");
               assert.notProperty(thread, "reported");
               assert.notProperty(thread, "delete_password");
               thread.replies.forEach(reply => {
@@ -81,7 +82,7 @@ suite("Functional Tests", function() {
                 assert.notProperty(thread, "delete_password");
               });
             });
-          
+
             // set threadId1
             threadId1 = res.body[0]._id;
 
@@ -99,6 +100,9 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 400);
             done();
+          })
+          .catch(err => {
+            console.log(err.message);
           });
       });
 

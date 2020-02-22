@@ -43,3 +43,22 @@ exports.listThreads = async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 };
+
+exports.deleteThread = async (req, res) => {
+  const { board } = req.params;
+  const Thread = ThreadModel.setBoard(board);
+
+  const { thread_id, delete_password } = req.body;
+  
+  try {
+    // issue delete request
+    const deletedThread = await Thread.deleteOne({ _id: thread_id, delete_password: delete_password });
+    if (!deletedThread) {
+      return res.status(400).json({ error: 'Invalid thread_id or delete_password.'});
+    }
+    console.log(deletedThread);
+    return res.status(200).json({ message: 'Thread deleted.' });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
