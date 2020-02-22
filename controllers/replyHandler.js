@@ -51,3 +51,29 @@ exports.getReplies = async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 };
+
+exports.reportReply = async (req, res) => {
+  const { board } = req.params;
+  const Thread = ThreadModel.setBoard(board);
+  
+  const { thread_id, reply_id } = req.body;
+  
+  try {
+    const reportedReply = await Thread.findOneAndUpdate(
+      { _id: thread_id, "replies._id": reply_id },
+      {
+        $set: {
+          "replies.$.reported": true
+        }
+      },
+      { new: true }
+    );
+    
+    if (!reportedReply) {
+      return res.status(404).json({ error: 'No such thread' });
+    }
+    return res.status(200).send('success');
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}

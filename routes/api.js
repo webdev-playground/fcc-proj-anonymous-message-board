@@ -17,11 +17,11 @@ module.exports = function(app) {
     .route("/api/threads/:board")
     .post(threadHandler.createThread)
     .get(threadHandler.listThreads)
-    .delete(threadHandler.deleteThread)
-    .put(threadHandler.reportThread);
+    .put(threadHandler.reportThread)
+    .delete(threadHandler.deleteThread);
 
   app.route("/api/replies/:board")
     .post(replyHandler.createReply)
     .get(replyHandler.getReplies)
-  ;
+    .put(replyHandler.reportReply);
 };
