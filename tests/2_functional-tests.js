@@ -234,7 +234,6 @@ suite("Functional Tests", function() {
           .then(res => {
             assert.equal(res.status, 200);
             assert.equal(res.text, 'success');
-          
             done();
           })
           .catch(err => {
@@ -243,6 +242,22 @@ suite("Functional Tests", function() {
       });
     });
 
-    suite("DELETE", function() {});
+    suite("DELETE", function() {
+      test('change reply to [deleted] on thread', done => {
+        chai
+          .request(server)
+          .delete('/api/replies/test')
+          .send({ thread_id: threadId2 , reply_id: replyId1 , delete_password: 'reply_password' })
+          .then(res => {
+            assert.equal(res.status, 200);
+            assert.equal(res.text, 'success');
+            done();
+          })
+          .catch(err => {
+            console.error(err.message);
+          })
+      });
+    });
+
   });
 });

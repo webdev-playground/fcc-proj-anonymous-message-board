@@ -23,5 +23,6 @@ module.exports = function(app) {
   app.route("/api/replies/:board")
     .post(replyHandler.createReply)
     .get(replyHandler.getReplies)
-    .put(replyHandler.reportReply);
+    .put(replyHandler.reportReply)
+    .delete(replyHandler.deleteReply);
 };
